@@ -30,3 +30,6 @@ class FileData():
         self.time = time
         self.position = position
         self.value = value
+
+    def shift_to_zero(self):
+        self.value -= self.value[0]
