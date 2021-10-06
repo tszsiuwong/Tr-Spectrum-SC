@@ -15,6 +15,7 @@ class FileData():
 
         para_from = file_info["para_from"]
         para_to = file_info["para_to"]
+        value_osc = file_info["value_osc"]
 
         para = file[para_from:para_to]
         para_d = file[para_to+1:para_to+2]
@@ -24,7 +25,7 @@ class FileData():
 
         position = data[1:-1,1]
         time = data[1:-1,0]
-        value = data[1:-1,2]
+        value = value_osc/5*data[1:-1,2]
         # parameter
         self.para = int(para)+int(para_d)/10
         # 

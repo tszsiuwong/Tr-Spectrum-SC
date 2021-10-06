@@ -6,7 +6,7 @@ class PlotFigure:
         self.fileData_list = fileData_list
         self.num_files = num_files
 
-    def plot(self, color_bar_style):
+    def plot_time_domain(self, color_bar_style, with_fit_lines):
         color_list = self.generating_color(color_bar_style)
 
         plt = self.plt
@@ -23,15 +23,18 @@ class PlotFigure:
             time = file_data.time
             value_t = file_data.value
             para = file_data.para
-            value_t = 20*value_t
-            
+
+            time_from_zeros = file_data.time_from_zeros
+            value_fit = file_data.value_fit
         #     if i <3:
         #         value_t = value_t*0.3
         #         plt.text(time[-1]-2,value_t[-1]+0.2,r'$\times$0.3',fontdict={'size':'28','color':color_list[i]})
         #     if i == len(files)-1:
         #         plt.plot(time,value_t+0*(len(files)-i-1),label=str(int(para*10))+r" $\mu$J cm$^{-2}$",color=color_list[i],linewidth=3)
         #     else:
-            plt.plot(time,value_t+shift*(self.num_files-i-1),label=str(int(para*10)),color=color_list[i],linewidth=3)
+            plt.plot(time, value_t+shift*(self.num_files-i-1),label=str(int(para*10)),color=color_list[i],linewidth=3)
+            if with_fit_lines:
+                plt.plot(time_from_zeros, value_fit, '--k')
             i += 1
 
         plt.xticks(fontsize=40)
@@ -57,7 +60,12 @@ class PlotFigure:
         ax.yaxis.set_ticks_position("left")
         ax.xaxis.set_ticks_position("bottom")
 
-        plt.savefig('output/Power dependent time domain.eps',bbox_inches = 'tight')
+        if with_fit_lines:
+            name = 'output/Power dependent time domain with fits.eps'
+        else:
+            name = 'output/Power dependent time domain.eps'
+
+        plt.savefig(name, bbox_inches = 'tight')
         plt.show()
 
 
