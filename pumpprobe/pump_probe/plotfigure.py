@@ -61,13 +61,66 @@ class PlotFigure:
         ax.xaxis.set_ticks_position("bottom")
 
         if with_fit_lines:
-            name = 'output/Power dependent time domain with fits.eps'
+            name = 'output/para dependent time domain with fits.eps'
         else:
-            name = 'output/Power dependent time domain.eps'
+            name = 'output/para dependent time domain.eps'
 
         plt.savefig(name, bbox_inches = 'tight')
         plt.show()
 
+    def plot_fre_domain(self, color_bar_style):
+        color_list = self.generating_color(color_bar_style)
+        plt = self.plt
+
+        plt.figure(figsize=(16,12))
+        i = 0
+        shift = 8
+        for file_data in self.fileData_list:
+
+            fre = file_data.frequency
+            value_f = file_data.value_f
+            para = file_data.para
+
+            time_from_zeros = file_data.time_from_zeros
+            value_fit = file_data.value_fit
+            para = file_data.para
+
+
+            if para == 0.5 or para == 2.3 or para == 5.5 or para == 12.5:
+                plt.text(5,value_f[-1]+shift*(self.num_files-i)+2,str(10*para),fontdict={'size':'20','color':color_list[i]})
+            if para == 30:
+                plt.text(5,value_f[-1]+shift*(self.num_files-i)+4,str(10*para)+r' $\mu$ J cm$^{-2}$',fontdict={'size':'20','color':color_list[i]})
+
+            plt.plot(fre,value_f+shift*(self.num_files-i),color=color_list[i],linewidth=2)
+            i += 1
+
+
+        plt.xticks(fontsize=40)
+        plt.yticks((),fontsize=40)
+        plt.xlabel('Frequency (THz)',fontsize=40)
+        plt.ylabel('arb. units', fontsize=40)
+
+        set_lw = 3
+        ax=plt.gca()
+        ax.spines['bottom'].set_linewidth(set_lw);###设置底部坐标轴的粗细
+        ax.spines['left'].set_linewidth(set_lw);####设置左边坐标轴的粗细
+        ax.spines['right'].set_linewidth(set_lw);###设置右边坐标轴的粗细
+        ax.spines['top'].set_linewidth(set_lw);###设置右边坐标轴的粗细
+        plt.xlim(0.2,6)
+        plt.ylim(0,300)
+
+        for tickline in ax.xaxis.get_ticklines():
+            tickline.set_markersize(10)
+            tickline.set_markeredgewidth(5)
+        for tickline in ax.yaxis.get_ticklines():
+            tickline.set_markersize(10)
+            tickline.set_markeredgewidth(5)
+        ax.yaxis.set_ticks_position("left")
+        ax.xaxis.set_ticks_position("bottom")
+
+        # plt.legend(fontsize=17,frameon=False,loc='upper left')
+        plt.savefig('output/Fluence dependent fre domain.eps',bbox_inches = 'tight')
+        plt.show()
 
     def generating_color(self, color_bar_style):
         if color_bar_style == "rainbow" or "rainbow_r":
@@ -101,3 +154,5 @@ class PlotFigure:
                 color_list.append([Color_R[i], Color_G[i], Color_B[i]])
 
         return color_list
+
+    

@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from scipy.optimize import curve_fit
+import scipy as sci
 
 class FileData():
     def __init__(self, file, file_info) -> None:
@@ -35,11 +36,14 @@ class FileData():
         self.position = position
         self.value = value
 
+        # cut from zero
         self.time_from_zeros = time
         self.value_from_zeros = value
 
+        # fitting results
         self.value_fit = value
         
+        # fit parameter
         self.A_1 = 0
         self.A_2 = 0
         self.tau_1 = 0
@@ -47,6 +51,9 @@ class FileData():
         self.tau_1_err = 0
         self.tau_2_err = 0
 
+        # fft parameter
+        self.frequency = None
+        self.value_f = None
 
     def get_peak_position(self):
         peak_position = np.argmax(abs(self.value))
@@ -81,3 +88,16 @@ class FileData():
         self.tau_1_err = pcov[1,1]
         self.tau_2 = -q
         self.tau_2_n = pcov[3,3]
+
+    def fourier_transfer(self, fre_cutoff):
+        dt = (self.time_from_zeros[-1]-self.time_from_zeros[0])/(len(self.time_from_zeros)-1)
+        value_t = self.value_from_zeros - self.value_fit
+        value_f = abs(sci.fft(value_t))
+        frequency = np.arange(0,1/dt,1/dt/len(self.time_from_zeros))
+
+        i = 0
+        while frequency[i]< fre_cutoff:
+            i+=1
+        
+        self.frequency = frequency[:i]
+        self.value_f = value_f[:i]
