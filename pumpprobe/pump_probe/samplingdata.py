@@ -18,8 +18,7 @@ class SamplingData():
         para_to = file_info["para_to"]
         value_osc = file_info["value_osc"]
 
-        para = file[para_from:para_to]
-        para_d = file[para_to+1:para_to+2]
+
 
         file_name = file_info["f_path"] + file
         data = np.loadtxt(file_name)
@@ -28,7 +27,14 @@ class SamplingData():
         time = data[1:-1,0]
         value = value_osc/5*data[1:-1,2]
         # parameter
-        self.para = int(para)+int(para_d)/10
+        para = file[para_from:para_to]
+
+        if file_info["int"]:
+            self.para = int(para)
+        else:
+            para_d = file[para_to+1:para_to+2]
+            self.para = int(para)+int(para_d)/10
+
         # 
         self.file_name = file
 
@@ -101,3 +107,6 @@ class SamplingData():
         
         self.frequency = frequency[:i]
         self.value_f = value_f[:i]
+    
+    def para_scale(self, scale):
+        self.para *= scale

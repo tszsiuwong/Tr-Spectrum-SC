@@ -6,16 +6,19 @@ class PlotFigure:
         self.fileData_list = fileData_list
         self.num_files = num_files
 
-    def plot_time_domain(self, color_bar_style, with_fit_lines):
-        color_list = self.generating_color(color_bar_style)
+    def plot_time_domain(self, plot_info):
+        color_bar_style = plot_info["color_bar_style"]
+        with_fit_lines = plot_info["with_fit_lines"]
+        figsize = plot_info["figsize"]
 
+        color_list = self.generating_color(color_bar_style)
         plt = self.plt
         
-        plt.figure(figsize=(16,12))
+        plt.figure(figsize=figsize)
         plt.rcParams['xtick.direction'] = 'in' 
         plt.rcParams['ytick.direction'] = 'in'
 
-        shift = 0.0
+        shift = plot_info["shift"]
 
         i = 0
 
@@ -28,11 +31,14 @@ class PlotFigure:
             value_fit = file_data.value_fit
         #     if i <3:
         #         value_t = value_t*0.3
-        #         plt.text(time[-1]-2,value_t[-1]+0.2,r'$\times$0.3',fontdict={'size':'28','color':color_list[i]})
+        #         plt.text(time[-1]-2,value_t[-1]+0.2,r'$\times$0.3',
+        # fontdict={'size':'28','color':color_list[i]})
         #     if i == len(files)-1:
-        #         plt.plot(time,value_t+0*(len(files)-i-1),label=str(int(para*10))+r" $\mu$J cm$^{-2}$",color=color_list[i],linewidth=3)
+        #         plt.plot(time,value_t+0*(len(files)-i-1),
+        # label=str(int(para*10))+r" $\mu$J cm$^{-2}$",color=color_list[i],linewidth=3)
         #     else:
-            plt.plot(time, value_t+shift*(self.num_files-i-1),label=str(int(para*10)),color=color_list[i],linewidth=3)
+            plt.plot(time, value_t+shift*(self.num_files-i-1),
+            label=str(int(para)),color=color_list[i],linewidth=3)
             if with_fit_lines:
                 plt.plot(time_from_zeros, value_fit, '--k')
             i += 1
@@ -82,9 +88,11 @@ class PlotFigure:
             para = file_data.para
 
             if para == 0.5 or para == 2.3 or para == 5.5 or para == 12.5:
-                plt.text(5,value_f[-1]+shift*(self.num_files-i)+2,str(10*para),fontdict={'size':'20','color':color_list[i]})
+                plt.text(5,value_f[-1]+shift*(self.num_files-i)+2,
+                str(para),fontdict={'size':'20','color':color_list[i]})
             if para == 30:
-                plt.text(5,value_f[-1]+shift*(self.num_files-i)+4,str(10*para)+r' $\mu$ J cm$^{-2}$',fontdict={'size':'20','color':color_list[i]})
+                plt.text(5,value_f[-1]+shift*(self.num_files-i)+4,
+                str(para)+r' $\mu$ J cm$^{-2}$',fontdict={'size':'20','color':color_list[i]})
 
             plt.plot(fre,value_f+shift*(self.num_files-i),color=color_list[i],linewidth=2)
             i += 1
@@ -97,10 +105,10 @@ class PlotFigure:
 
         set_lw = 3
         ax=plt.gca()
-        ax.spines['bottom'].set_linewidth(set_lw);###设置底部坐标轴的粗细
-        ax.spines['left'].set_linewidth(set_lw);####设置左边坐标轴的粗细
-        ax.spines['right'].set_linewidth(set_lw);###设置右边坐标轴的粗细
-        ax.spines['top'].set_linewidth(set_lw);###设置右边坐标轴的粗细
+        ax.spines['bottom'].set_linewidth(set_lw)
+        ax.spines['left'].set_linewidth(set_lw)
+        ax.spines['right'].set_linewidth(set_lw)
+        ax.spines['top'].set_linewidth(set_lw)
         plt.xlim(0.2,6)
         plt.ylim(0,300)
 
@@ -113,7 +121,6 @@ class PlotFigure:
         ax.yaxis.set_ticks_position("left")
         ax.xaxis.set_ticks_position("bottom")
 
-        # plt.legend(fontsize=17,frameon=False,loc='upper left')
         plt.savefig('output/Fluence dependent fre domain.eps',bbox_inches = 'tight')
         plt.show()
     
@@ -128,23 +135,23 @@ class PlotFigure:
             para = np.append(para, file_data.para)
             value_f_map = np.append(value_f_map, file_data.value_f)
 
-        X,Y = np.meshgrid(fre,10*para)
+        X,Y = np.meshgrid(fre,para)
         value_f_map = value_f_map.reshape(np.shape(X))
 
-        plt.pcolor(X[para<10], Y[para<10], value_f_map[para<10], cmap="viridis")
-        # plt.title("Temperature dependent",fontsize=20)
+        plt.pcolor(X[para<100], Y[para<100], value_f_map[para<100], cmap="viridis")
+
         plt.xticks(fontsize=40)
         plt.yticks(fontsize=40)
         plt.xlabel('Frequency (THz)',fontsize=40)
         plt.ylabel(r'Fluence ($\mu$ J cm$^{-2}$)',fontsize=40)
-        # plt.ylabel('E/mV',fontsize=40)
+
         set_lw = 1
-        ax=plt.gca();#获得坐标轴的句柄
-        # plt.grid()
-        ax.spines['bottom'].set_linewidth(set_lw);###设置底部坐标轴的粗细
-        ax.spines['left'].set_linewidth(set_lw);####设置左边坐标轴的粗细
-        ax.spines['right'].set_linewidth(set_lw);###设置右边坐标轴的粗细
-        ax.spines['top'].set_linewidth(set_lw);###设置右边坐标轴的粗细
+        ax=plt.gca()
+
+        ax.spines['bottom'].set_linewidth(set_lw)
+        ax.spines['left'].set_linewidth(set_lw)
+        ax.spines['right'].set_linewidth(set_lw)
+        ax.spines['top'].set_linewidth(set_lw)
         plt.colorbar()
         x = np.arange(0,5,0.01)
         y = np.ones(len(x))
@@ -154,10 +161,11 @@ class PlotFigure:
         plt.text(1.5,10,'1.3 THz',fontdict={'size':'30','color':[1,1,1],'fontweight':'bold',})
         plt.text(3.3,10,'3.1 THz',fontdict={'size':'30','color':[1,1,1],'fontweight':'bold',})
         plt.text(3.5,85,'4.1 THz',fontdict={'size':'30','color':[1,1,1],'fontweight':'bold',})
-        plt.text(2,24,r'23 $\mu$J cm$^{-2}$',fontdict={'size':'30','color':[1,1,0],'fontweight':'bold',})
-        plt.text(2,51,r'55 $\mu$J cm$^{-2}$',fontdict={'size':'30','color':[1,1,0],'fontweight':'bold',})
-        # plt.ylim(0,18)
-        # plt.legend(fontsize=18,frameon=True,loc='upper left')
+        plt.text(2,24,r'23 $\mu$J cm$^{-2}$',
+        fontdict={'size':'30','color':[1,1,0],'fontweight':'bold',})
+        plt.text(2,51,r'55 $\mu$J cm$^{-2}$',
+        fontdict={'size':'30','color':[1,1,0],'fontweight':'bold',})
+
         plt.savefig('output/Fluence dependent fre domain waterfall.eps',bbox_inches = 'tight')
         plt.show()
 
