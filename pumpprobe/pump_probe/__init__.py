@@ -19,6 +19,6 @@ __status__ = "Development"
 ###########################################################################
 ### Windows OS catch for library geopandas not installed with setup.py
 
-from . import filedata
+from . import samplingdata
 from . import filesort
 

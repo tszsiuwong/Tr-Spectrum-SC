@@ -3,7 +3,7 @@ import numpy as np
 from scipy.optimize import curve_fit
 import scipy as sci
 
-class FileData():
+class SamplingData():
     def __init__(self, file, file_info) -> None:
         """
         file_info = {
