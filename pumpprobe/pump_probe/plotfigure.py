@@ -89,14 +89,7 @@ class PlotFigure:
 
             fre = file_data.frequency
             value_f = file_data.value_f
-            para = file_data.para
 
-            # if para == 0.5 or para == 2.3 or para == 5.5 or para == 12.5:
-            #     plt.text(5,value_f[-1]+shift*(self.num_files-i)+2,
-            #     str(para),fontdict={'size':'20','color':color_list[i]})
-            # if para == 30:
-            #     plt.text(5,value_f[-1]+shift*(self.num_files-i)+4,
-            #     str(para)+r' $\mu$ J cm$^{-2}$',fontdict={'size':'20','color':color_list[i]})
 
             plt.plot(fre,value_f+shift*(self.num_files-i),color=color_list[i],linewidth=2)
             i += 1
