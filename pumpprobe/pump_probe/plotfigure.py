@@ -29,25 +29,24 @@ class PlotFigure:
 
             time_from_zeros = file_data.time_from_zeros
             value_fit = file_data.value_fit
-        #     if i <3:
-        #         value_t = value_t*0.3
-        #         plt.text(time[-1]-2,value_t[-1]+0.2,r'$\times$0.3',
-        # fontdict={'size':'28','color':color_list[i]})
-        #     if i == len(files)-1:
-        #         plt.plot(time,value_t+0*(len(files)-i-1),
-        # label=str(int(para*10))+r" $\mu$J cm$^{-2}$",color=color_list[i],linewidth=3)
-        #     else:
             plt.plot(time, value_t+shift*(self.num_files-i-1),
             label=str(int(para)),color=color_list[i],linewidth=3)
             if with_fit_lines:
-                plt.plot(time_from_zeros, value_fit, '--k')
+                plt.plot(time_from_zeros, 
+                value_fit+shift*(self.num_files-i-1), '--k')
+            if plot_info["marker"] == "text":
+                plt.text(-1.4,(shift)*(self.num_files-i-1)+0.01,str(para)+'K',
+                fontdict={'size':'20','color':color_list[i]})
             i += 1
 
         plt.xticks(fontsize=40)
         plt.yticks(fontsize=40)
         plt.xlabel('Time Delay (ps)',fontsize=40)
         plt.ylabel(r'$\Delta$R/R (10$^{-4}$)',fontsize=40)
-        plt.legend(fontsize=17,frameon=False,loc='lower left')
+
+        if plot_info["marker"] == "legend":
+            plt.legend(fontsize=17,frameon=False,loc='lower left')
+        
         plt.xlim(xlim)
         set_lw = 3
         ax=plt.gca()
