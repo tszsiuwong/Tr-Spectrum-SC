@@ -10,7 +10,7 @@ class PlotFigure:
         color_bar_style = plot_info["color_bar_style"]
         with_fit_lines = plot_info["with_fit_lines"]
         figsize = plot_info["figsize"]
-
+        xlim = plot_info["xlim"]
         color_list = self.generating_color(color_bar_style)
         plt = self.plt
         
@@ -48,7 +48,7 @@ class PlotFigure:
         plt.xlabel('Time Delay (ps)',fontsize=40)
         plt.ylabel(r'$\Delta$R/R (10$^{-4}$)',fontsize=40)
         plt.legend(fontsize=17,frameon=False,loc='lower left')
-
+        plt.xlim(xlim)
         set_lw = 3
         ax=plt.gca()
         ax.spines['bottom'].set_linewidth(set_lw)
@@ -201,7 +201,15 @@ class PlotFigure:
             color_list = []
             for i in range(self.num_files):
                 color_list.append([Color_R[i], Color_G[i], Color_B[i]])
-
+        
+        if color_bar_style == "blue_red":
+            num = self.num_files
+            Color_R = np.linspace(230,77,num)/255
+            Color_G = np.linspace(50,67,num)/255
+            Color_B = np.linspace(18,152,num)/255
+            color_list = []
+            for i in range(self.num_files):
+                color_list.append([Color_R[i], Color_G[i], Color_B[i]])
         return color_list
 
     
