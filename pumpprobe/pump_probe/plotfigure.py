@@ -73,25 +73,30 @@ class PlotFigure:
         plt.savefig(name, bbox_inches = 'tight')
         plt.show()
 
-    def plot_fre_domain(self, color_bar_style):
+    def plot_fre_domain(self, plot_info):
+        color_bar_style = plot_info["color_bar_style"]
+        shift = plot_info["shift"]
+        figsize = plot_info["figsize"]
+        xlim = plot_info["xlim"]
+        ylim = plot_info["ylim"]
+
         color_list = self.generating_color(color_bar_style)
         plt = self.plt
 
-        plt.figure(figsize=(16,12))
+        plt.figure(figsize=figsize)
         i = 0
-        shift = 8
         for file_data in self.fileData_list:
 
             fre = file_data.frequency
             value_f = file_data.value_f
             para = file_data.para
 
-            if para == 0.5 or para == 2.3 or para == 5.5 or para == 12.5:
-                plt.text(5,value_f[-1]+shift*(self.num_files-i)+2,
-                str(para),fontdict={'size':'20','color':color_list[i]})
-            if para == 30:
-                plt.text(5,value_f[-1]+shift*(self.num_files-i)+4,
-                str(para)+r' $\mu$ J cm$^{-2}$',fontdict={'size':'20','color':color_list[i]})
+            # if para == 0.5 or para == 2.3 or para == 5.5 or para == 12.5:
+            #     plt.text(5,value_f[-1]+shift*(self.num_files-i)+2,
+            #     str(para),fontdict={'size':'20','color':color_list[i]})
+            # if para == 30:
+            #     plt.text(5,value_f[-1]+shift*(self.num_files-i)+4,
+            #     str(para)+r' $\mu$ J cm$^{-2}$',fontdict={'size':'20','color':color_list[i]})
 
             plt.plot(fre,value_f+shift*(self.num_files-i),color=color_list[i],linewidth=2)
             i += 1
@@ -108,8 +113,8 @@ class PlotFigure:
         ax.spines['left'].set_linewidth(set_lw)
         ax.spines['right'].set_linewidth(set_lw)
         ax.spines['top'].set_linewidth(set_lw)
-        plt.xlim(0.2,6)
-        plt.ylim(0,300)
+        plt.xlim(xlim)
+        plt.ylim(ylim)
 
         for tickline in ax.xaxis.get_ticklines():
             tickline.set_markersize(10)
